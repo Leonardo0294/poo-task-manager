@@ -1,30 +1,32 @@
-import { PurchaseService } from '../services/purchase.service.js';
+import Purchase from '../models/purchase.model.js';
+import { body, validationResult } from 'express-validator';
 
-export class PurchaseController {
-  static async createPurchase(req, res) {
+// Crear una nueva compra
+export const createPurchase = [
+  body('user').isMongoId(),
+  body('products').isArray().withMessage('Products should be an array'),
+  body('total').isNumeric().notEmpty(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
-      const purchase = await PurchaseService.createPurchase(req.body);
+      const purchase = await Purchase.createPurchase(req.body);
       res.status(201).json(purchase);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ message: error.message });
     }
   }
+];
 
-  static async getAllPurchases(req, res) {
-    try {
-      const purchases = await PurchaseService.getAllPurchases();
-      res.json(purchases);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+// Obtener todas las compras
+export const getPurchases = async (req, res) => {
+  try {
+    const purchases = await Purchase.getPurchases();
+    res.status(200).json(purchases);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  static async getPurchaseById(req, res) {
-    try {
-      const purchase = await PurchaseService.getPurchaseById(req.params.id);
-      res.json(purchase);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  }
-}
+};

@@ -1,34 +1,33 @@
-import { ProductService } from '../services/product.service.js';
+import Product from '../models/product.models.js';
+import { body, validationResult } from 'express-validator';
 
-export class ProductController {
-  static async createProduct(req, res) {
+// Crear un nuevo producto
+export const createProduct = [
+  body('name').isString().notEmpty(),
+  body('price').isNumeric().notEmpty(),
+  body('description').isString().notEmpty(),
+  body('stock').isNumeric().notEmpty(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
-      const product = await ProductService.createProduct(req.body);
+      const product = await Product.createProduct(req.body);
       res.status(201).json(product);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ message: error.message });
     }
   }
+];
 
-  static async getAllProducts(req, res) {
-    try {
-      const products = await ProductService.getAllProducts();
-      res.json(products);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+// Obtener todos los productos
+export const getProducts = async (req, res) => {
+  try {
+    const products = await Product.getProducts();
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  static async getProductById(req, res) {
-    try {
-      const product = await ProductService.getProductById(req.params.id);
-      if (product) {
-        res.json(product);
-      } else {
-        res.status(404).json({ error: 'Product not found' });
-      }
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  }
-}
+};

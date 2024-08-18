@@ -1,29 +1,28 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../config/database.js';
-import { User } from './user.models.js';
+import mongoose from 'mongoose';
 
-export const Purchase = sequelize.define('Purchase', {
-  purchase_id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  buyer_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'user_id',
-    },
-  },
-  total_amount: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  purchase_date: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-}, {
-  timestamps: true,
+// Definir el esquema de compra
+const purchaseSchema = new mongoose.Schema({
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  quantity: { type: Number, required: true },
+  totalPrice: { type: Number, required: true }
 });
+
+// Crear una clase para el modelo
+class PurchaseClass {
+  static async createPurchase(data) {
+    const purchase = new this(data);
+    return await purchase.save();
+  }
+
+  static async getPurchases() {
+    return await this.find().populate('productId');
+  }
+}
+
+// Agregar métodos estáticos a la clase
+purchaseSchema.loadClass(PurchaseClass);
+
+// Crear el modelo a partir del esquema
+const Purchase = mongoose.model('Purchase', purchaseSchema);
+
+export default Purchase;

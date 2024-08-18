@@ -1,12 +1,10 @@
-import { Router } from 'express';
-import { ProductController } from '../controllers/product.controller.js';
-import { createProductValidator } from '../validators/product.validator.js';
+import express from 'express';
+import { createProduct, getProducts } from '../controllers/product.controller.js';
 
-const router = Router();
+const router = express.Router();
 
-// Definir las rutas
-router.post('/', createProductValidator, ProductController.createProduct);
-router.get('/', ProductController.getAllProducts);
-router.get('/:id', ProductController.getProductById);
+// Rutas para productos
+router.post('/', createProduct);
+router.get('/', getProducts);
 
 export default router;

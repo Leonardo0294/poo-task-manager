@@ -1,17 +1,25 @@
-import { Sequelize } from 'sequelize';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-// Cargar variables de entorno
+// Configurar dotenv para manejar variables de entorno
 dotenv.config();
 
-const sequelize = new Sequelize({
-  dialect: process.env.DB_DIALECT,
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT, 10), // Asegúrate de que el puerto sea un número
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  logging: false, // Puedes habilitar el logging para ver las consultas SQL si es necesario
-});
+// Obtener la URL de conexión desde las variables de entorno
+const { MONGO_URI } = process.env;
 
-export { sequelize };
+if (!MONGO_URI) {
+  throw new Error('MONGO_URI is not defined in environment variables');
+}
+
+// Conectar a la base de datos MongoDB
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log('MongoDB connected successfully');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error.message);
+    process.exit(1); // Salir del proceso con un código de error
+  }
+};
+
+export default connectDB;

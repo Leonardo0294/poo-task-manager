@@ -1,23 +1,46 @@
-import { User } from '../models/user.models.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import User from '../models/user.model.js';
 
-dotenv.config();
-
-export class UserService {
-  static async register(data) {
-    const { username, email, password } = data;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    return User.create({ username, email, password: hashedPassword, role_id: 1 }); // Asignar un rol predeterminado
+class UserService {
+  static async createUser(data) {
+    try {
+      const user = new User(data);
+      return await user.save();
+    } catch (error) {
+      throw new Error('Error creating user: ' + error.message);
+    }
   }
 
-  static async login(data) {
-    const { email, password } = data;
-    const user = await User.findOne({ where: { email } });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new Error('Invalid email or password');
+  static async getUserById(userId) {
+    try {
+      return await User.findById(userId).exec();
+    } catch (error) {
+      throw new Error('Error fetching user: ' + error.message);
     }
-    return jwt.sign({ user_id: user.user_id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+  }
+
+  static async getAllUsers() {
+    try {
+      return await User.find().exec();
+    } catch (error) {
+      throw new Error('Error fetching users: ' + error.message);
+    }
+  }
+
+  static async updateUser(userId, data) {
+    try {
+      return await User.findByIdAndUpdate(userId, data, { new: true }).exec();
+    } catch (error) {
+      throw new Error('Error updating user: ' + error.message);
+    }
+  }
+
+  static async deleteUser(userId) {
+    try {
+      return await User.findByIdAndDelete(userId).exec();
+    } catch (error) {
+      throw new Error('Error deleting user: ' + error.message);
+    }
   }
 }
+
+export default UserService;
