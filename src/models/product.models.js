@@ -20,10 +20,10 @@ class ProductClass {
   }
 }
 
-// Agregar métodos estáticos a la clase
+// métodos estáticos a la clase
 productSchema.loadClass(ProductClass);
 
-// Crear el modelo a partir del esquema
+//Se crea el modelo a partir del esquema
 const Product = mongoose.model('Product', productSchema);
 
 export default Product;

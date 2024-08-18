@@ -25,9 +25,9 @@ export const createPurchasedProduct = [
 // Obtener todos los productos comprados
 export const getPurchasedProducts = async (req, res) => {
   try {
-    const purchasedProducts = await PurchasedProduct.find();  // Obtener todos los productos comprados
-    res.status(200).json(purchasedProducts);  // Responder con la lista de productos comprados
+    const purchasedProducts = await PurchasedProduct.find(); 
+    res.status(200).json(purchasedProducts);  
   } catch (error) {
-    res.status(500).json({ message: error.message });  // Manejar errores del servidor
+    res.status(500).json({ message: error.message });  
   }
 };

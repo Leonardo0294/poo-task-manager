@@ -18,7 +18,7 @@ const purchasedProductSchema = new mongoose.Schema({
   }
 });
 
-// Crear una clase para el modelo
+// clase para el modelo
 class PurchasedProductClass {
   static async createPurchasedProduct(data) {
     const purchasedProduct = new this(data);
@@ -30,7 +30,7 @@ class PurchasedProductClass {
   }
 }
 
-// Agregar métodos estáticos a la clase
+// métodos estáticos a la clase
 purchasedProductSchema.loadClass(PurchasedProductClass);
 
 // Crear el modelo a partir del esquema

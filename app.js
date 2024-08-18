@@ -1,5 +1,5 @@
 import express from 'express';
-import connectDB from './src/config/database.js';  // Ruta al archivo de configuración de la base de datos
+import connectDB from './src/config/database.js'; 
 import userRoutes from './src/routes/user.routes.js';
 import productRoutes from './src/routes/product.routes.js';
 import purchaseRoutes from './src/routes/purchase.routes.js';
