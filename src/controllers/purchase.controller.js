@@ -3,9 +3,9 @@ import { body, validationResult } from 'express-validator';
 
 // Crear una nueva compra
 export const createPurchase = [
-  body('user').isMongoId(),
+  body('user').isMongoId().withMessage('Invalid user ID'),
   body('products').isArray().withMessage('Products should be an array'),
-  body('total').isNumeric().notEmpty(),
+  body('total').isNumeric().withMessage('Invalid total value'),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

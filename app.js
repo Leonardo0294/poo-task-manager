@@ -20,7 +20,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/purchased-products', purchasedProductRoutes);
 app.use('/api/roles', roleRoutes);
-const dbUrl = 'mongodb+srv://leonardo0294:<password>@cluster0.o1znu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+
 // Configuración del puerto y inicio del servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

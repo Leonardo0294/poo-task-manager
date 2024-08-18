@@ -3,9 +3,9 @@ import { body, validationResult } from 'express-validator';
 
 // Crear un nuevo usuario
 export const createUser = [
-  body('username').isString().notEmpty(),
-  body('password').isString().notEmpty(),
-  body('role').isMongoId(),
+  body('name').isString().notEmpty(),       // 'name' es requerido
+  body('email').isEmail().notEmpty(),       // 'email' debe ser una dirección de correo válida
+  body('password').isString().notEmpty(),   // 'password' es requerido
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -13,19 +13,20 @@ export const createUser = [
     }
 
     try {
-      const { username, password, role } = req.body;
-      const user = await User.register(username, password, role);
-      res.status(201).json(user);
+      const { name, email, password } = req.body;
+      const user = new User({ name, email, password });
+      await user.save();  // Guarda el nuevo usuario en la base de datos
+      res.status(201).json(user);  // Responde con el usuario creado
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });  // Maneja errores del servidor
     }
   }
 ];
 
 // Autenticar un usuario
 export const authenticateUser = [
-  body('username').isString().notEmpty(),
-  body('password').isString().notEmpty(),
+  body('email').isEmail().notEmpty(),       // 'email' debe ser una dirección de correo válida
+  body('password').isString().notEmpty(),   // 'password' es requerido
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -33,16 +34,15 @@ export const authenticateUser = [
     }
 
     try {
-      const { username, password } = req.body;
-      const user = await User.authenticate(username, password);
+      const { email, password } = req.body;
+      const user = await User.findOne({ email, password });  // Busca el usuario por email y contraseña
       if (user) {
-        // Aquí puedes generar y devolver un token JWT si es necesario
-        res.status(200).json(user);
+        res.status(200).json(user);  // Responde con el usuario encontrado
       } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+        res.status(401).json({ message: 'Invalid credentials' });  // Credenciales inválidas
       }
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });  // Maneja errores del servidor
     }
   }
 ];

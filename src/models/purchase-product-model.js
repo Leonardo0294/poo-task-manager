@@ -2,22 +2,31 @@ import mongoose from 'mongoose';
 
 // Definir el esquema del producto comprado
 const purchasedProductSchema = new mongoose.Schema({
-  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-  quantity: { type: Number, required: true },
-  purchaseDate: { type: Date, default: Date.now }
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true
+  },
+  purchase: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Purchase',
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true
+  }
 });
 
 // Crear una clase para el modelo
 class PurchasedProductClass {
-  // Método estático para crear un nuevo producto comprado
   static async createPurchasedProduct(data) {
     const purchasedProduct = new this(data);
     return await purchasedProduct.save();
   }
 
-  // Método estático para obtener todos los productos comprados
   static async getPurchasedProducts() {
-    return await this.find().populate('productId');
+    return await this.find().populate('product').populate('purchase');
   }
 }
 

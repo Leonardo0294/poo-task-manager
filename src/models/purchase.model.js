@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 // Definir el esquema de compra
 const purchaseSchema = new mongoose.Schema({
-  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-  quantity: { type: Number, required: true },
-  totalPrice: { type: Number, required: true }
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Asegúrate de que 'user' esté definido
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }], // Asegúrate de que 'products' sea una lista de ObjectIds
+  total: { type: Number, required: true } // Asegúrate de que 'total' sea un número
 });
 
 // Crear una clase para el modelo
@@ -15,7 +15,7 @@ class PurchaseClass {
   }
 
   static async getPurchases() {
-    return await this.find().populate('productId');
+    return await this.find().populate('products').populate('user');
   }
 }
 

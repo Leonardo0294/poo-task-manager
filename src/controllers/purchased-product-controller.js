@@ -3,9 +3,9 @@ import { body, validationResult } from 'express-validator';
 
 // Crear un nuevo producto comprado
 export const createPurchasedProduct = [
-  body('product').isMongoId(),
-  body('purchase').isMongoId(),
-  body('quantity').isNumeric().notEmpty(),
+  body('product').isMongoId().withMessage('Invalid product ID'), // Validar ID de producto
+  body('purchase').isMongoId().withMessage('Invalid purchase ID'), // Validar ID de compra
+  body('quantity').isNumeric().withMessage('Quantity must be a number').notEmpty().withMessage('Quantity is required'), // Validar cantidad
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -13,10 +13,11 @@ export const createPurchasedProduct = [
     }
 
     try {
-      const purchasedProduct = await PurchasedProduct.createPurchasedProduct(req.body);
-      res.status(201).json(purchasedProduct);
+      const purchasedProduct = new PurchasedProduct(req.body);
+      await purchasedProduct.save();  // Guardar el nuevo producto comprado en la base de datos
+      res.status(201).json(purchasedProduct);  // Responder con el producto comprado creado
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });  // Manejar errores del servidor
     }
   }
 ];
@@ -24,9 +25,9 @@ export const createPurchasedProduct = [
 // Obtener todos los productos comprados
 export const getPurchasedProducts = async (req, res) => {
   try {
-    const purchasedProducts = await PurchasedProduct.getPurchasedProducts();
-    res.status(200).json(purchasedProducts);
+    const purchasedProducts = await PurchasedProduct.find();  // Obtener todos los productos comprados
+    res.status(200).json(purchasedProducts);  // Responder con la lista de productos comprados
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });  // Manejar errores del servidor
   }
 };
