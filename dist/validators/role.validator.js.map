@@ -1,0 +1,1 @@
+{"version":3,"file":"role.validator.js","sourceRoot":"","sources":["../../src/validators/role.validator.ts"],"names":[],"mappings":";;;AAAA,yDAA0D;AAG7C,QAAA,mBAAmB,GAAsB;IACpD,IAAA,wBAAI,EAAC,MAAM,CAAC;SACT,QAAQ,EAAE;SACV,WAAW,CAAC,4BAA4B,CAAC;SACzC,QAAQ,EAAE;SACV,WAAW,CAAC,uBAAuB,CAAC;IAEvC,IAAA,wBAAI,EAAC,aAAa,CAAC;SAChB,OAAO,EAAE;SACT,WAAW,CAAC,gCAAgC,CAAC;CACjD,CAAC"}
